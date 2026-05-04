@@ -8,6 +8,11 @@ use App\Http\Controllers\Buyer\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -30,9 +35,28 @@ Route::middleware(['auth', 'verified', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
-        Route::get('/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Products
+        Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
+        Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
+        Route::post('/products', [AdminProductController::class, 'store'])->name('products.store');
+        Route::get('/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
+        Route::put('/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
+        Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+
+        // Categories
+        Route::resource('categories', AdminCategoryController::class)->names('categories');
+
+        // Orders
+        Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+        Route::post('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');
+        Route::post('/orders/{order}/cancel', [AdminOrderController::class, 'cancel'])->name('orders.cancel');
+
+        // Reports
+        Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
+        Route::post('/reports/export', [AdminReportController::class, 'exportPdf'])->name('reports.export');
     });
 
 Route::middleware(['auth', 'buyer'])->group(function () {
