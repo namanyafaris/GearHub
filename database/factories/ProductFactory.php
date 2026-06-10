@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
  */
 class ProductFactory extends Factory
 {
+    protected string $searchTerm = 'gaming gear';
+
     /**
      * Define the model's default state.
      *
@@ -27,7 +29,7 @@ class ProductFactory extends Factory
             'description' => fake()->paragraph(),
             'price' => fake()->numberBetween(100000, 1000000),
             'stock' => fake()->numberBetween(20, 100),
-            'image' => 'products/default.jpg',
+            'image' => 'gaming gear',
             'is_active' => true,
         ];
     }
@@ -37,6 +39,7 @@ class ProductFactory extends Factory
      */
     public function mouseGaming(): static
     {
+        $this->searchTerm = 'gaming mouse';
         return $this->state(fn() => $this->categoryState(
             [
                 'Rexus Daxa M84 Pro RGB',
@@ -56,6 +59,7 @@ class ProductFactory extends Factory
      */
     public function keyboardGaming(): static
     {
+        $this->searchTerm = 'gaming keyboard';
         return $this->state(fn() => $this->categoryState(
             [
                 'Fantech Atom MK876 TKL',
@@ -75,6 +79,7 @@ class ProductFactory extends Factory
      */
     public function headsetGaming(): static
     {
+        $this->searchTerm = 'gaming headset';
         return $this->state(fn() => $this->categoryState(
             [
                 'Rexus Vonix F55',
@@ -94,6 +99,7 @@ class ProductFactory extends Factory
      */
     public function mousepadGaming(): static
     {
+        $this->searchTerm = 'gaming mousepad';
         return $this->state(fn() => $this->categoryState(
             [
                 'Fantech Sven MP25',
@@ -113,6 +119,7 @@ class ProductFactory extends Factory
      */
     public function controllerGaming(): static
     {
+        $this->searchTerm = 'gaming controller';
         return $this->state(fn() => $this->categoryState(
             [
                 'Fantech Shooter GP11',
@@ -132,6 +139,7 @@ class ProductFactory extends Factory
      */
     public function webcamGaming(): static
     {
+        $this->searchTerm = 'gaming webcam';
         return $this->state(fn() => $this->categoryState(
             [
                 'Fantech Luminous C30',
@@ -164,8 +172,27 @@ class ProductFactory extends Factory
             'description' => fake()->sentence(18),
             'price' => fake()->numberBetween($minPrice, $maxPrice),
             'stock' => fake()->numberBetween(20, 100),
-            'image' => 'products/' . Str::slug($name) . '.jpg',
+            'image' => $this->getUnsplashImageUrl($this->searchTerm),
             'is_active' => true,
         ];
+    }
+
+    /**
+     * Get image URL from Picsum API with category seeds.
+     */
+    private function getUnsplashImageUrl(string $searchTerm): string
+    {
+        // Map search terms to consistent seed IDs
+        $seeds = [
+            'gaming mouse' => fake()->numberBetween(100, 150),
+            'gaming keyboard' => fake()->numberBetween(200, 250),
+            'gaming headset' => fake()->numberBetween(300, 350),
+            'gaming mousepad' => fake()->numberBetween(400, 450),
+            'gaming controller' => fake()->numberBetween(500, 550),
+            'gaming webcam' => fake()->numberBetween(600, 650),
+        ];
+
+        $seed = $seeds[$searchTerm] ?? fake()->numberBetween(1, 1000);
+        return "https://picsum.photos/400/300?random={$seed}";
     }
 }

@@ -1,0 +1,66 @@
+# Quick Commands Reference
+
+## Setup Real Product Images
+
+### Windows PowerShell/CMD:
+```bash
+# Run the real images seeder
+php artisan db:seed --class=RealProductImagesSeeder
+
+# Or reseed everything from scratch
+php artisan migrate:fresh --seed && php artisan db:seed --class=RealProductImagesSeeder
+```
+
+### macOS/Linux Bash:
+```bash
+php artisan db:seed --class=RealProductImagesSeeder
+```
+
+---
+
+## Expected Image Files Location:
+```
+storage/app/public/products/
+├── mouse.jpg         (20 mouse gaming products)
+├── keyboard.jpg      (20 keyboard gaming products)
+├── headset.jpg       (20 headset gaming products)
+├── mousepad.jpg      (20 mousepad gaming products)
+├── controller.jpg    (20 controller gaming products)
+└── webcam.jpg        (20 webcam gaming products)
+```
+
+---
+
+## After Seeding:
+
+1. **Check home page**: http://127.0.0.1:8000
+   - Should see real images in product cards (not placeholder)
+
+2. **Check product detail**: Click any product
+   - Real image in main display + thumbnails
+
+3. **Check admin page**: http://127.0.0.1:8000/admin/products
+   - All products with real images
+
+---
+
+## To Re-seed (e.g., if you want new images):
+
+```bash
+# Keep same database, just update images
+php artisan db:seed --class=RealProductImagesSeeder
+
+# Or full reset
+php artisan migrate:fresh --seed && php artisan db:seed --class=RealProductImagesSeeder
+```
+
+---
+
+## Cleanup old placeholder:
+
+If you want to remove the old placeholder.jpg:
+```bash
+rm storage/app/public/products/placeholder.jpg
+```
+
+Done! 🎉
