@@ -6,13 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use App\Services\CollaborativeFilteringService;
 use App\Services\UserInteractionService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function __construct(private readonly UserInteractionService $interactionService) {}
+    public function __construct(
+        private readonly UserInteractionService $interactionService,
+        private readonly CollaborativeFilteringService $cfService,
+    ) {}
 
     /**
      * Display product catalog with filter, sort, and search.
@@ -94,6 +98,7 @@ class ProductController extends Controller
             $this->interactionService->log($user, $product->id, 'view');
         }
 
+        // Produk Serupa — berdasarkan kategori yang sama (tetap dipertahankan)
         $similarProducts = Product::query()
             ->activeProducts()
             ->where('category_id', $product->category_id)
@@ -101,9 +106,18 @@ class ProductController extends Controller
             ->take(4)
             ->get();
 
+        // Rekomendasi CF — berdasarkan Collaborative Filtering
+        $cfRecommendations = collect();
+        if ($user instanceof User && $user->isBuyer()) {
+            $cfRecommendations = $this->cfService->getRecommendations($user->id)
+                ->reject(fn($p) => $p->id === $product->id)
+                ->take(4);
+        }
+
         return view('buyer.products.show', [
             'product' => $product,
             'similarProducts' => $similarProducts,
+            'cfRecommendations' => $cfRecommendations,
         ]);
     }
 }

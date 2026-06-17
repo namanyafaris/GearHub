@@ -128,6 +128,27 @@ $avgRounded = (int) round($avgRating);
         @endforelse
     </div>
 </section>
+
+@if ($cfRecommendations->isNotEmpty())
+<section class="mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="h4 fw-bold mb-1">Rekomendasi Untukmu</h2>
+            <small class="text-success"><i class="bi bi-bullseye"></i> Berdasarkan preferensi kamu (Collaborative Filtering)</small>
+        </div>
+        <span class="badge bg-success">
+            <i class="bi bi-bullseye me-1"></i>CF
+        </span>
+    </div>
+    <div class="row g-3">
+        @foreach ($cfRecommendations as $item)
+        <div class="col-12 col-sm-6 col-md-3">
+            @include('buyer.partials.product-card', ['product' => $item])
+        </div>
+        @endforeach
+    </div>
+</section>
+@endif
 @endsection
 
 @push('scripts')

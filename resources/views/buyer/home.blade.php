@@ -9,7 +9,7 @@
 			<p class="mb-4 text-white-50">Mouse, keyboard, headset, webcam, dan aksesoris pilihan. Belanja cepat, aman, dan siap dipersonalisasi dengan sistem rekomendasi.</p>
 			<div class="d-flex gap-2">
 				<a href="{{ route('products.index') }}" class="btn btn-brand btn-lg">Mulai Belanja</a>
-				<a href="#rekomendasi" class="btn btn-outline-light btn-lg">Lihat Rekomendasi</a>
+			<a href="{{ auth()->check() ? '#rekomendasi' : route('login') }}" class="btn btn-outline-light btn-lg">Lihat Rekomendasi</a>
 			</div>
 		</div>
 		<div class="col-lg-5">
@@ -63,15 +63,36 @@
 
 <section id="rekomendasi" class="mb-4">
 	<div class="d-flex justify-content-between align-items-center mb-3">
-		<h2 class="section-title h4 mb-0">Rekomendasi untuk Kamu</h2>
-		<small class="text-secondary">Placeholder: produk terlaris</small>
+		<div>
+			<h2 class="section-title h4 mb-1">Rekomendasi untuk Kamu</h2>
+			@if ($recommendationType === 'cf')
+				<small class="text-success"><i class="bi bi-bullseye"></i> Berdasarkan preferensi kamu (Collaborative Filtering)</small>
+			@elseif ($recommendationType === 'bestseller')
+				<small class="text-secondary"><i class="bi bi-fire"></i> Produk terlaris saat ini</small>
+			@else
+				<small class="text-secondary"><i class="bi bi-fire"></i> Produk terlaris saat ini</small>
+			@endif
+		</div>
+		@if ($recommendationType === 'cf')
+			<span class="badge bg-success">
+				<i class="bi bi-bullseye me-1"></i>CF
+			</span>
+		@else
+			<span class="badge bg-secondary">
+				<i class="bi bi-fire me-1"></i>Best Seller
+			</span>
+		@endif
 	</div>
 	<div class="row g-3">
-		@foreach ($recommendedProducts as $product)
+		@forelse ($recommendedProducts as $product)
 		<div class="col-12 col-sm-6 col-md-3">
 			@include('buyer.partials.product-card', ['product' => $product])
 		</div>
-		@endforeach
+		@empty
+		<div class="col-12">
+			<div class="alert alert-light mb-0">Belum ada data rekomendasi. Mulai jelajahi produk untuk mendapatkan rekomendasi yang lebih personal!</div>
+		</div>
+		@endforelse
 	</div>
 </section>
 @endsection

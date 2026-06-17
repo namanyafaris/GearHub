@@ -5,6 +5,7 @@ use App\Http\Controllers\Buyer\CheckoutController;
 use App\Http\Controllers\Buyer\HomeController;
 use App\Http\Controllers\Buyer\OrderController;
 use App\Http\Controllers\Buyer\ProductController;
+use App\Http\Controllers\Buyer\RecommendationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -73,6 +74,9 @@ Route::middleware(['auth', 'buyer'])->group(function () {
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
     });
 });
+
+Route::middleware('auth')->get('/recommendations', [RecommendationController::class, 'index'])
+    ->name('recommendations.index');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
