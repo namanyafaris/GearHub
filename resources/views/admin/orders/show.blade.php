@@ -9,7 +9,21 @@
 	<p>{{ $order->user->name ?? '-' }}<br>{{ $order->user->email ?? '' }}</p>
 
 	<h6>Alamat</h6>
-	<p>{!! nl2br(e($order->address)) !!}</p>
+	<p>{!! nl2br(e($order->shipping_address ?? $order->address ?? '-')) !!}</p>
+
+	<h6>Pembayaran</h6>
+	<p>
+		Metode: <span class="badge bg-secondary text-capitalize">{{ $order->payment_method }}</span>
+		@if($order->payment_method === 'transfer')
+			<br>
+			Bukti Transfer: 
+			@if($order->payment_proof)
+				<a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-info mt-1">Lihat Bukti Transfer</a>
+			@else
+				<span class="text-danger">Belum diunggah</span>
+			@endif
+		@endif
+	</p>
 
 	<h6>Items</h6>
 	<table class="table table-sm">

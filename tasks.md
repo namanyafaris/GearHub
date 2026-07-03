@@ -51,7 +51,7 @@
 ---
 
 ## In Progress
-- [ ] Fase 7 — Algoritma Collaborative Filtering (Inti Skripsi)
+- [ ] Fase 8 — Review, Rating & Polish
 
 ---
 

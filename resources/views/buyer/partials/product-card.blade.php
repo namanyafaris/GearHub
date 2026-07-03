@@ -33,7 +33,13 @@ $ratingInt = (int) round($product->averageRating());
 
         <div class="mt-auto d-flex justify-content-between align-items-end">
             <div class="fw-bold">{{ $product->format_price }}</div>
-            <span class="badge text-bg-light">Stok: {{ $product->stock }}</span>
+            @if ($product->stock < 1)
+                <span class="badge text-bg-danger">Habis</span>
+            @elseif ($product->stock <= 10)
+                <span class="badge text-bg-warning">Stok: {{ $product->stock }}</span>
+            @else
+                <span class="badge text-bg-success">Stok: {{ $product->stock }}</span>
+            @endif
         </div>
     </div>
 </div>

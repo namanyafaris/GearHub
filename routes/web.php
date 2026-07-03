@@ -6,6 +6,7 @@ use App\Http\Controllers\Buyer\HomeController;
 use App\Http\Controllers\Buyer\OrderController;
 use App\Http\Controllers\Buyer\ProductController;
 use App\Http\Controllers\Buyer\RecommendationController;
+use App\Http\Controllers\Buyer\ReviewController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\RecommendationLogController;
 use App\Http\Controllers\Admin\ReportController as AdminReportController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -58,6 +60,10 @@ Route::middleware(['auth', 'verified', 'admin'])
         // Reports
         Route::get('/reports', [AdminReportController::class, 'index'])->name('reports.index');
         Route::post('/reports/export', [AdminReportController::class, 'exportPdf'])->name('reports.export');
+
+        // Recommendation Log (White-Box Testing)
+        Route::get('/recommendations-log', [RecommendationLogController::class, 'index'])->name('recommendations-log.index');
+        Route::get('/recommendations-log/{user}', [RecommendationLogController::class, 'show'])->name('recommendations-log.show');
     });
 
 Route::middleware(['auth', 'buyer'])->group(function () {
@@ -72,7 +78,12 @@ Route::middleware(['auth', 'buyer'])->group(function () {
     Route::prefix('orders')->name('orders.')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('index');
         Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::post('/{order}/payment-proof', [OrderController::class, 'uploadPaymentProof'])->name('payment_proof');
+        Route::get('/{order}/invoice', [OrderController::class, 'invoice'])->name('invoice');
     });
+
+    // Reviews
+    Route::post('/reviews/{product}', [ReviewController::class, 'store'])->name('reviews.store');
 });
 
 Route::middleware('auth')->get('/recommendations', [RecommendationController::class, 'index'])

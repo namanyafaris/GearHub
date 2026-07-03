@@ -13,7 +13,10 @@ $statusClass = [
 
 <div class="d-flex justify-content-between align-items-center mb-4">
 	<h1 class="h4 fw-bold mb-0">Detail Pesanan #{{ $order->id }}</h1>
-	<span class="badge text-bg-{{ $statusClass[$order->status] ?? 'secondary' }}">{{ ucfirst($order->status) }}</span>
+	<div>
+		<a href="{{ route('orders.invoice', $order) }}" class="btn btn-sm btn-outline-danger me-2">Download Invoice PDF</a>
+		<span class="badge text-bg-{{ $statusClass[$order->status] ?? 'secondary' }}">{{ ucfirst($order->status) }}</span>
+	</div>
 </div>
 
 <div class="row g-4 mb-4">
@@ -70,6 +73,33 @@ $statusClass = [
 				</div>
 			</div>
 		</div>
+
+		@if($order->payment_method === 'transfer')
+		<div class="card border-0 shadow-sm mt-3 border-primary">
+			<div class="card-body">
+				<h2 class="h6 fw-bold mb-3 text-primary">Bukti Pembayaran</h2>
+				
+				@if($order->payment_proof)
+					<div class="alert alert-success mb-2">Bukti pembayaran telah diunggah.</div>
+					<a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="btn btn-outline-primary btn-sm w-100">Lihat Bukti Struk</a>
+				@else
+					<div class="alert alert-warning mb-3">Silakan transfer sebesar <strong>Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong> dan unggah bukti pembayarannya di bawah ini agar pesanan dapat diproses.</div>
+					
+					<form action="{{ route('orders.payment_proof', $order) }}" method="POST" enctype="multipart/form-data" onsubmit="this.querySelector('button').disabled=true; this.querySelector('.spinner-border').classList.remove('d-none');">
+						@csrf
+						<div class="mb-3">
+							<input class="form-control form-control-sm" type="file" name="payment_proof" accept="image/jpeg,image/png" required>
+							<div class="form-text text-muted" style="font-size: 11px;">Format: JPG, PNG. Maksimal 2MB. Jika gambar terlalu besar, proses upload akan gagal.</div>
+						</div>
+						<button type="submit" class="btn btn-primary btn-sm w-100">
+							<span class="spinner-border spinner-border-sm d-none me-1" role="status" aria-hidden="true"></span>
+							Kirim Bukti Pembayaran
+						</button>
+					</form>
+				@endif
+			</div>
+		</div>
+		@endif
 	</div>
 </div>
 

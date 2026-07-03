@@ -44,16 +44,32 @@
 					<li class="nav-item"><a class="nav-link" href="{{ route('admin.categories.index') }}">Kategori</a></li>
 					<li class="nav-item"><a class="nav-link" href="{{ route('admin.orders.index') }}">Pesanan</a></li>
 					<li class="nav-item"><a class="nav-link" href="{{ route('admin.reports.index') }}">Laporan</a></li>
+					<li class="nav-item"><a class="nav-link" href="{{ route('admin.recommendations-log.index') }}">Log Rekomendasi</a></li>
 				</ul>
 			</aside>
 
 			<main class="col-md-10 py-4">
 				<div class="container-fluid">
 					@if(session('success'))
-					<div class="alert alert-success">{{ session('success') }}</div>
+					<div class="alert alert-success alert-dismissible fade show d-flex align-items-center flash-auto-dismiss" role="alert">
+						<i class="bi bi-check-circle-fill me-2"></i>
+						<div>{{ session('success') }}</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
 					@endif
 					@if(session('error'))
-					<div class="alert alert-danger">{{ session('error') }}</div>
+					<div class="alert alert-danger alert-dismissible fade show d-flex align-items-center flash-auto-dismiss" role="alert">
+						<i class="bi bi-exclamation-triangle-fill me-2"></i>
+						<div>{{ session('error') }}</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
+					@endif
+					@if(session('warning'))
+					<div class="alert alert-warning alert-dismissible fade show d-flex align-items-center flash-auto-dismiss" role="alert">
+						<i class="bi bi-exclamation-circle-fill me-2"></i>
+						<div>{{ session('warning') }}</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					</div>
 					@endif
 					@yield('content')
 				</div>
@@ -63,7 +79,19 @@
 
 	<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">@csrf</form>
 
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		// Auto-dismiss flash messages after 5 seconds
+		document.addEventListener('DOMContentLoaded', function() {
+			document.querySelectorAll('.flash-auto-dismiss').forEach(function(alert) {
+				setTimeout(function() {
+					var bsAlert = bootstrap.Alert.getOrCreateInstance(alert);
+					bsAlert.close();
+				}, 5000);
+			});
+		});
+	</script>
 	@stack('scripts')
 </body>
 

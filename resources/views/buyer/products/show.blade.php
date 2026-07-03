@@ -51,19 +51,28 @@ $avgRounded = (int) round($avgRating);
         </div>
 
         <div class="h4 fw-bold mb-3">{{ $product->format_price }}</div>
-        <p class="mb-3"><span class="fw-semibold">Stok:</span> {{ $product->stock }}</p>
+        <p class="mb-3">
+            <span class="fw-semibold">Stok:</span>
+            @if ($product->stock < 1)
+                <span class="badge text-bg-danger">Habis</span>
+            @elseif ($product->stock <= 10)
+                <span class="badge text-bg-warning">{{ $product->stock }}</span>
+            @else
+                <span class="badge text-bg-success">{{ $product->stock }}</span>
+            @endif
+        </p>
         <p class="text-secondary">{{ \Illuminate\Support\Str::limit($product->description, 180) }}</p>
 
         @auth
         @if (auth()->user()->isBuyer())
-        <form action="{{ route('cart.store', $product) }}" method="POST" class="row g-2 align-items-end mt-3">
+        <form action="{{ route('cart.store', $product) }}" method="POST" class="row g-2 align-items-end mt-3" id="addToCartForm">
             @csrf
             <div class="col-auto">
                 <label for="quantity" class="form-label">Qty</label>
                 <input type="number" min="1" max="{{ $product->stock }}" value="1" name="quantity" id="quantity" class="form-control" style="max-width: 100px;" {{ $product->stock < 1 ? 'disabled' : '' }}>
             </div>
             <div class="col-auto">
-                <button type="submit" class="btn btn-brand" {{ $product->stock < 1 ? 'disabled' : '' }}>
+                <button type="submit" class="btn btn-brand" id="addToCartBtn" {{ $product->stock < 1 ? 'disabled' : '' }}>
                     Tambah ke Keranjang
                 </button>
             </div>
@@ -83,7 +92,7 @@ $avgRounded = (int) round($avgRating);
         <button class="nav-link active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc-pane" type="button" role="tab">Deskripsi</button>
     </li>
     <li class="nav-item" role="presentation">
-        <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review-pane" type="button" role="tab">Review & Rating</button>
+        <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review-pane" type="button" role="tab">Review & Rating ({{ $product->reviews->count() }})</button>
     </li>
 </ul>
 
@@ -92,6 +101,57 @@ $avgRounded = (int) round($avgRating);
         <p class="mb-0">{{ $product->description }}</p>
     </div>
     <div class="tab-pane fade" id="review-pane" role="tabpanel">
+
+        {{-- Review Form --}}
+        @auth
+        @if (auth()->user()->isBuyer())
+            @if ($canReview)
+            <div class="card border-0 bg-light mb-4">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3"><i class="bi bi-pencil-square me-1"></i>Tulis Review</h6>
+                    <form action="{{ route('reviews.store', $product) }}" method="POST" id="reviewForm">
+                        @csrf
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Rating <span class="text-danger">*</span></label>
+                            <div class="star-picker d-flex gap-1" id="starPicker">
+                                @for ($i = 1; $i <= 5; $i++)
+                                <label class="star-label" data-value="{{ $i }}" title="{{ $i }} bintang" style="cursor: pointer; font-size: 1.75rem; color: #d1d5db; transition: color 0.15s;">
+                                    <input type="radio" name="rating" value="{{ $i }}" class="d-none" {{ old('rating') == $i ? 'checked' : '' }}>
+                                    <i class="bi bi-star-fill"></i>
+                                </label>
+                                @endfor
+                            </div>
+                            @error('rating')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="comment" class="form-label fw-semibold">Komentar <span class="text-secondary">(opsional)</span></label>
+                            <textarea name="comment" id="comment" rows="3" class="form-control" placeholder="Ceritakan pengalaman kamu dengan produk ini..." maxlength="1000">{{ old('comment') }}</textarea>
+                            @error('comment')
+                            <div class="text-danger small mt-1">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <button type="submit" class="btn btn-brand" id="submitReviewBtn">
+                            <span class="spinner-border spinner-border-sm d-none me-1" id="reviewSpinner" role="status"></span>
+                            Kirim Review
+                        </button>
+                    </form>
+                </div>
+            </div>
+            @elseif ($alreadyReviewed)
+            <div class="alert alert-success mb-4">
+                <i class="bi bi-check-circle-fill me-1"></i>Kamu sudah memberikan review untuk produk ini.
+            </div>
+            @elseif (!$hasOrdered)
+            <div class="alert alert-info mb-4">
+                <i class="bi bi-info-circle-fill me-1"></i>Hanya buyer yang sudah membeli dan menerima produk ini yang bisa memberikan review.
+            </div>
+            @endif
+        @endif
+        @endauth
+
+        {{-- Review List --}}
         @forelse ($product->reviews as $review)
         <div class="border rounded-3 p-3 mb-2">
             <div class="d-flex justify-content-between align-items-center mb-1">
@@ -153,6 +213,7 @@ $avgRounded = (int) round($avgRating);
 
 @push('scripts')
 <script>
+    // Thumbnail gallery switcher
     document.querySelectorAll('.thumb-trigger').forEach(function(button) {
         button.addEventListener('click', function() {
             var image = button.getAttribute('data-image');
@@ -169,5 +230,66 @@ $avgRounded = (int) round($avgRating);
             }
         });
     });
+
+    // Interactive star picker
+    (function() {
+        var picker = document.getElementById('starPicker');
+        if (!picker) return;
+
+        var labels = picker.querySelectorAll('.star-label');
+        var activeColor = '#f59e0b';
+        var inactiveColor = '#d1d5db';
+
+        function updateStars(activeIndex) {
+            labels.forEach(function(label, index) {
+                label.querySelector('i').style.color = index <= activeIndex ? activeColor : inactiveColor;
+            });
+        }
+
+        // Initialize from old input
+        var checked = picker.querySelector('input:checked');
+        if (checked) {
+            updateStars(parseInt(checked.value) - 1);
+        }
+
+        labels.forEach(function(label, index) {
+            label.addEventListener('click', function() {
+                label.querySelector('input').checked = true;
+                updateStars(index);
+            });
+
+            label.addEventListener('mouseenter', function() {
+                updateStars(index);
+            });
+        });
+
+        picker.addEventListener('mouseleave', function() {
+            var checked = picker.querySelector('input:checked');
+            if (checked) {
+                updateStars(parseInt(checked.value) - 1);
+            } else {
+                updateStars(-1);
+            }
+        });
+    })();
+
+    // Anti-double submit for review form
+    (function() {
+        var form = document.getElementById('reviewForm');
+        if (!form) return;
+
+        form.addEventListener('submit', function() {
+            var btn = document.getElementById('submitReviewBtn');
+            var spinner = document.getElementById('reviewSpinner');
+
+            if (btn) {
+                btn.disabled = true;
+            }
+
+            if (spinner) {
+                spinner.classList.remove('d-none');
+            }
+        });
+    })();
 </script>
 @endpush

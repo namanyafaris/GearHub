@@ -19,7 +19,7 @@
 </head>
 
 <body>
-	<h3>Laporan Penjualan Bulan {{ $month }} / {{ $year }}</h3>
+	<h3>Laporan Penjualan ({{ \Carbon\Carbon::parse($startDate)->format('d M Y') }} - {{ \Carbon\Carbon::parse($endDate)->format('d M Y') }})</h3>
 	<table>
 		<thead>
 			<tr>

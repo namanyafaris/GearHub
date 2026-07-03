@@ -5,24 +5,28 @@
 @section('content')
 <h4>Laporan Penjualan</h4>
 
-<form method="GET" class="row g-2 mb-3">
+<form method="GET" class="row g-2 mb-3 align-items-center">
 	<div class="col-auto">
-		<select name="month" class="form-control">
-			@for($m=1;$m<=12;$m++)
-				<option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>{{ $m }}</option>
-				@endfor
-		</select>
+		<label for="start_date" class="col-form-label">Dari Tanggal:</label>
 	</div>
 	<div class="col-auto">
-		<input type="number" name="year" value="{{ $year }}" class="form-control">
+		<input type="date" name="start_date" id="start_date" value="{{ $startDate }}" class="form-control">
 	</div>
-	<div class="col-auto"><button class="btn btn-secondary">Filter</button></div>
+	<div class="col-auto">
+		<label for="end_date" class="col-form-label">Sampai Tanggal:</label>
+	</div>
+	<div class="col-auto">
+		<input type="date" name="end_date" id="end_date" value="{{ $endDate }}" class="form-control">
+	</div>
+	<div class="col-auto">
+		<button class="btn btn-secondary">Filter</button>
+	</div>
 </form>
 
 <div class="mb-3">
 	<form action="{{ route('admin.reports.export') }}" method="POST">@csrf
-		<input type="hidden" name="month" value="{{ $month }}">
-		<input type="hidden" name="year" value="{{ $year }}">
+		<input type="hidden" name="start_date" value="{{ $startDate }}">
+		<input type="hidden" name="end_date" value="{{ $endDate }}">
 		<button class="btn btn-outline-primary">Export PDF</button>
 	</form>
 </div>

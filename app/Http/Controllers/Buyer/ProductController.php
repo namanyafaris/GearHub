@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Buyer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
+use App\Models\Review;
 use App\Models\User;
 use App\Services\CollaborativeFilteringService;
 use App\Services\UserInteractionService;
@@ -114,10 +116,38 @@ class ProductController extends Controller
                 ->take(4);
         }
 
+        // Review eligibility — cek apakah buyer boleh review produk ini
+        $canReview = false;
+        $hasOrdered = false;
+        $alreadyReviewed = false;
+
+        if ($user instanceof User && $user->isBuyer()) {
+            // Cek apakah buyer punya order delivered yang mengandung produk ini
+            $hasOrdered = Order::query()
+                ->where('buyer_id', $user->id)
+                ->where('status', 'delivered')
+                ->whereHas('orderItems', function ($query) use ($product): void {
+                    $query->where('product_id', $product->id);
+                })
+                ->exists();
+
+            // Cek apakah buyer sudah pernah review produk ini
+            $alreadyReviewed = Review::query()
+                ->where('buyer_id', $user->id)
+                ->where('product_id', $product->id)
+                ->exists();
+
+            // Buyer bisa review jika sudah order delivered dan belum review
+            $canReview = $hasOrdered && !$alreadyReviewed;
+        }
+
         return view('buyer.products.show', [
             'product' => $product,
             'similarProducts' => $similarProducts,
             'cfRecommendations' => $cfRecommendations,
+            'canReview' => $canReview,
+            'hasOrdered' => $hasOrdered,
+            'alreadyReviewed' => $alreadyReviewed,
         ]);
     }
 }

@@ -4,7 +4,7 @@
 <div class="hero-wrap p-4 p-lg-5 mb-5">
 	<div class="row align-items-center g-4">
 		<div class="col-lg-7">
-			<span class="badge bg-light text-dark mb-3">Gaming Gear Store - Single Seller</span>
+			<span class="badge bg-light text-dark mb-3">Gaming Gear Store</span>
 			<h1 class="display-6 fw-bold mb-3">Upgrade Setup Gaming-mu dengan Gear Terbaik</h1>
 			<p class="mb-4 text-white-50">Mouse, keyboard, headset, webcam, dan aksesoris pilihan. Belanja cepat, aman, dan siap dipersonalisasi dengan sistem rekomendasi.</p>
 			<div class="d-flex gap-2">
