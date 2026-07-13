@@ -51,7 +51,7 @@
 ---
 
 ## In Progress
-- [ ] Fase 8 — Review, Rating & Polish
+- [ ] Fase 9 — Pengujian Akhir (White-Box & Black-Box)
 
 ---
 

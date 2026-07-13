@@ -21,7 +21,7 @@
         .total-row th { text-align: right; font-size: 16px; }
         .total-row td { text-align: right; font-size: 16px; font-weight: bold; }
         .footer { text-align: center; font-size: 12px; color: #777; margin-top: 50px; border-top: 1px solid #ddd; padding-top: 10px; }
-        .badge { display: inline-block; padding: 3px 8px; font-size: 11px; border-radius: 4px; border: 1px solid #ccc; text-transform: uppercase;}
+        .badge { font-weight: bold; text-transform: uppercase; border: 1px solid #999; padding: 2px 6px; font-size: 11px; border-radius: 3px; }
     </style>
 </head>
 <body>

@@ -82,8 +82,17 @@ $statusClass = [
 				@if($order->payment_proof)
 					<div class="alert alert-success mb-2">Bukti pembayaran telah diunggah.</div>
 					<a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="btn btn-outline-primary btn-sm w-100">Lihat Bukti Struk</a>
+				@elseif($order->status !== 'pending')
+					<div class="alert alert-info mb-0">Pesanan telah diproses. Bukti transfer tidak diperlukan lagi.</div>
 				@else
-					<div class="alert alert-warning mb-3">Silakan transfer sebesar <strong>Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong> dan unggah bukti pembayarannya di bawah ini agar pesanan dapat diproses.</div>
+					<div class="alert alert-warning mb-3">
+						Silakan transfer sebesar <strong>Rp {{ number_format($order->total_price, 0, ',', '.') }}</strong> ke rekening berikut agar pesanan dapat diproses:
+						<div class="mt-2 p-2 bg-white text-dark rounded border border-warning" style="font-size: 14px;">
+							<strong>Bank BCA</strong><br>
+							No. Rekening: <strong>1234567890</strong><br>
+							Atas Nama: <strong>Syawal Alfarisi</strong>
+						</div>
+					</div>
 					
 					<form action="{{ route('orders.payment_proof', $order) }}" method="POST" enctype="multipart/form-data" onsubmit="this.querySelector('button').disabled=true; this.querySelector('.spinner-border').classList.remove('d-none');">
 						@csrf
