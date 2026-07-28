@@ -167,21 +167,22 @@ class ProductFactory extends Factory
         $name = $baseName . fake()->randomElement($suffixes);
 
         $idNames = [
-            'gaming mouse' => 'mouse gaming',
-            'gaming keyboard' => 'keyboard mekanikal',
-            'gaming headset' => 'headset gaming',
+            'gaming mouse' => 'mouse',
+            'gaming keyboard' => 'keyboard',
+            'gaming headset' => 'headset',
             'gaming mousepad' => 'mousepad',
-            'gaming controller' => 'gamepad',
+            'gaming controller' => 'controller',
             'gaming webcam' => 'webcam',
         ];
-        $produkName = $idNames[$this->searchTerm] ?? 'perlengkapan gaming';
+        
+        $imageName = $idNames[$this->searchTerm] ?? 'placeholder';
         
         $templates = [
-            "Tingkatkan pengalaman gaming Anda dengan {$produkName} berkualitas tinggi ini. Didesain secara ergonomis untuk kenyamanan maksimal selama sesi bermain panjang. Dilengkapi dengan fitur unggulan yang memastikan respon cepat dan presisi tinggi.",
-            "Lengkapi setup gaming-mu dengan {$produkName} terbaru ini! Material premium menjamin keawetan produk, sementara desainnya yang stylish membuat meja kerjamu terlihat semakin profesional. Cocok untuk gamer kasual maupun atlet e-sports.",
-            "Performa tanpa kompromi! {$produkName} ini dirancang khusus untuk memenangkan setiap pertandingan. Dengan latensi super rendah dan kustomisasi fitur yang lengkap, Anda memegang kendali penuh di tangan Anda.",
-            "Jangan biarkan perlengkapan standar menghambat potensimu. {$produkName} ini hadir dengan spesifikasi kelas atas: durabilitas tinggi, pencahayaan RGB yang memukau, dan akurasi sempurna untuk menunjang performa gaming kompetitif.",
-            "Solusi terbaik untuk kebutuhan gaming harianmu. {$produkName} ini menawarkan kombinasi sempurna antara harga yang masuk akal dan spesifikasi mumpuni. Dibuat dengan build-quality yang kokoh dan desain yang sangat nyaman digunakan."
+            "Tingkatkan pengalaman gaming Anda dengan perlengkapan berkualitas tinggi ini. Didesain secara ergonomis untuk kenyamanan maksimal selama sesi bermain panjang. Dilengkapi dengan fitur unggulan yang memastikan respon cepat dan presisi tinggi.",
+            "Lengkapi setup gaming-mu dengan perlengkapan terbaru ini! Material premium menjamin keawetan produk, sementara desainnya yang stylish membuat meja kerjamu terlihat semakin profesional. Cocok untuk gamer kasual maupun atlet e-sports.",
+            "Performa tanpa kompromi! Perlengkapan ini dirancang khusus untuk memenangkan setiap pertandingan. Dengan latensi super rendah dan kustomisasi fitur yang lengkap, Anda memegang kendali penuh di tangan Anda.",
+            "Jangan biarkan perlengkapan standar menghambat potensimu. Perlengkapan ini hadir dengan spesifikasi kelas atas: durabilitas tinggi, pencahayaan RGB yang memukau, dan akurasi sempurna untuk menunjang performa gaming kompetitif.",
+            "Solusi terbaik untuk kebutuhan gaming harianmu. Perlengkapan ini menawarkan kombinasi sempurna antara harga yang masuk akal dan spesifikasi mumpuni. Dibuat dengan build-quality yang kokoh dan desain yang sangat nyaman digunakan."
         ];
 
         return [
@@ -190,27 +191,8 @@ class ProductFactory extends Factory
             'description' => fake()->randomElement($templates),
             'price' => fake()->numberBetween($minPrice, $maxPrice),
             'stock' => fake()->numberBetween(20, 100),
-            'image' => $this->getUnsplashImageUrl($this->searchTerm),
+            'image' => 'products/' . $imageName . '.jpg',
             'is_active' => true,
         ];
-    }
-
-    /**
-     * Get image URL from Picsum API with category seeds.
-     */
-    private function getUnsplashImageUrl(string $searchTerm): string
-    {
-        // Map search terms to consistent seed IDs
-        $seeds = [
-            'gaming mouse' => fake()->numberBetween(100, 150),
-            'gaming keyboard' => fake()->numberBetween(200, 250),
-            'gaming headset' => fake()->numberBetween(300, 350),
-            'gaming mousepad' => fake()->numberBetween(400, 450),
-            'gaming controller' => fake()->numberBetween(500, 550),
-            'gaming webcam' => fake()->numberBetween(600, 650),
-        ];
-
-        $seed = $seeds[$searchTerm] ?? fake()->numberBetween(1, 1000);
-        return "https://picsum.photos/400/300?random={$seed}";
     }
 }
