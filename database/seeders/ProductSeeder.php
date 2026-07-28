@@ -41,6 +41,7 @@ class ProductSeeder extends Seeder
                 ->{$config['method']}()
                 ->create([
                     'category_id' => $category->id,
-                ])
+                ]);
+        }
     }
 }
