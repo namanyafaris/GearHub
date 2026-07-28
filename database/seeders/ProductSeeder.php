@@ -15,9 +15,6 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create dummy placeholder image if doesn't exist
-        $this->createPlaceholderImage();
-
         $categories = Category::query()->get()->keyBy('slug');
 
         $catalog = [
