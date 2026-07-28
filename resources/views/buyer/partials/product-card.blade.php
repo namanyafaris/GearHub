@@ -4,18 +4,13 @@ $ratingInt = (int) round($product->averageRating());
 @endphp
 
 <div class="card product-card h-100">
-    <a href="{{ route('products.show', $product) }}" class="text-decoration-none text-dark">
-        @if (! empty($product->image))
-        <img
-            src="{{ Storage::url($product->image) }}"
-            alt="{{ $product->name }}"
+    <a href="{{ route('products.show', $product->slug) }}" class="text-decoration-none text-dark">
+        <img 
+            src="{{ $product->image_url }}" 
+            alt="{{ $product->name }}" 
             class="card-img-top"
             style="height: 190px; object-fit: cover;"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="placeholder-image" style="display:none;"><i class="bi bi-controller"></i></div>
-        @else
-        <div class="placeholder-image"><i class="bi bi-controller"></i></div>
-        @endif
+        >
     </a>
 
     <div class="card-body d-flex flex-column">

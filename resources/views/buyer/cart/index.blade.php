@@ -24,9 +24,7 @@
 			<tr>
 				<td>
 					<div class="d-flex align-items-center gap-3">
-						@if (! empty($item->product->image))
-						<img src="{{ Storage::url($item->product->image) }}" alt="{{ $item->product->name }}" width="64" height="64" class="rounded" style="object-fit: cover;" onerror="this.style.display='none';">
-						@endif
+						<img src="{{ $item->product->image_url }}" alt="{{ $item->product->name }}" class="img-fluid rounded" style="width: 64px; height: 64px; object-fit: cover;">
 						<div>
 							<div class="fw-semibold">{{ $item->product->name }}</div>
 							<small class="text-secondary">{{ $item->product->category?->name }}</small>

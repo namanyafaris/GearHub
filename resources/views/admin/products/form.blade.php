@@ -34,8 +34,8 @@
 	<label class="form-label">Gambar Utama</label>
 	<input type="file" name="image" class="form-control">
 	<div class="form-text text-muted">Format: JPG, PNG. Maksimal 2MB. Jika gambar terlalu besar, proses upload akan gagal.</div>
-	@if(!empty($product->image))
-	<img src="{{ Storage::url($product->image) }}" class="img-fluid mt-2" style="max-width:150px;">
+	@if(isset($product))
+	<img src="{{ $product->image_url }}" class="img-fluid mt-2" style="max-width:150px;">
 	@endif
 </div>
 <div class="mb-3">

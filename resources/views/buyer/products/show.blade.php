@@ -3,7 +3,7 @@
 @section('content')
 @php
 $images = collect([$product->image])->merge($product->productImages->pluck('path'))->filter()->values();
-$mainImage = $images->first();
+$mainImage = $product->image_url;
 $avgRating = $product->averageRating();
 $avgRounded = (int) round($avgRating);
 @endphp
@@ -12,18 +12,12 @@ $avgRounded = (int) round($avgRating);
     <div class="col-lg-6">
         <div class="card border-0 shadow-sm">
             <div class="card-body">
-                @if ($mainImage)
                 <img
                     id="mainProductImage"
-                    src="{{ Storage::url($mainImage) }}"
+                    src="{{ $mainImage }}"
                     alt="{{ $product->name }}"
                     class="img-fluid rounded-3 w-100"
-                    style="height: 420px; object-fit: cover;"
-                    onerror="this.style.display='none'; document.getElementById('mainPlaceholder').style.display='flex';">
-                <div id="mainPlaceholder" class="placeholder-image rounded-3" style="height: 420px; display:none;"><i class="bi bi-image"></i></div>
-                @else
-                <div id="mainPlaceholder" class="placeholder-image rounded-3" style="height: 420px;"><i class="bi bi-image"></i></div>
-                @endif
+                    style="height: 420px; object-fit: cover;">
 
                 @if ($images->count() > 1)
                 <div class="d-flex flex-wrap gap-2 mt-3">

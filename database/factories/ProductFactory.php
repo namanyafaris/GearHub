@@ -166,17 +166,6 @@ class ProductFactory extends Factory
         $suffixes = ['', ' Pro', ' RGB', ' SE', ' Max', ' V2', ' Lite'];
         $name = $baseName . fake()->randomElement($suffixes);
 
-        $idNames = [
-            'gaming mouse' => 'mouse',
-            'gaming keyboard' => 'keyboard',
-            'gaming headset' => 'headset',
-            'gaming mousepad' => 'mousepad',
-            'gaming controller' => 'controller',
-            'gaming webcam' => 'webcam',
-        ];
-        
-        $imageName = $idNames[$this->searchTerm] ?? 'placeholder';
-        
         $templates = [
             "Tingkatkan pengalaman gaming Anda dengan perlengkapan berkualitas tinggi ini. Didesain secara ergonomis untuk kenyamanan maksimal selama sesi bermain panjang. Dilengkapi dengan fitur unggulan yang memastikan respon cepat dan presisi tinggi.",
             "Lengkapi setup gaming-mu dengan perlengkapan terbaru ini! Material premium menjamin keawetan produk, sementara desainnya yang stylish membuat meja kerjamu terlihat semakin profesional. Cocok untuk gamer kasual maupun atlet e-sports.",
@@ -191,7 +180,7 @@ class ProductFactory extends Factory
             'description' => fake()->randomElement($templates),
             'price' => fake()->numberBetween($minPrice, $maxPrice),
             'stock' => fake()->numberBetween(20, 100),
-            'image' => 'products/' . $imageName . '.jpg',
+            'image' => null,
             'is_active' => true,
         ];
     }

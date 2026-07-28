@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -111,5 +112,37 @@ class Product extends Model
         }
 
         return (float) $this->reviews()->avg('rating') ?: 0.0;
+    }
+
+    /**
+     * Get the dynamic image URL (fallback to category).
+     */
+    public function getImageUrlAttribute(): string
+    {
+        if (!empty($this->image)) {
+            return Storage::url($this->image);
+        }
+
+        if (!$this->relationLoaded('category') && !$this->category_id) {
+             return Storage::url('products/placeholder.jpg');
+        }
+
+        $slug = $this->category->slug ?? '';
+
+        if (str_contains($slug, 'mousepad')) {
+            return Storage::url('products/mousepad.jpg');
+        } elseif (str_contains($slug, 'mouse')) {
+            return Storage::url('products/mouse.jpg');
+        } elseif (str_contains($slug, 'keyboard')) {
+            return Storage::url('products/keyboard.jpg');
+        } elseif (str_contains($slug, 'headset')) {
+            return Storage::url('products/headset.jpg');
+        } elseif (str_contains($slug, 'controller')) {
+            return Storage::url('products/controller.jpg');
+        } elseif (str_contains($slug, 'webcam')) {
+            return Storage::url('products/webcam.jpg');
+        }
+
+        return Storage::url('products/placeholder.jpg');
     }
 }
