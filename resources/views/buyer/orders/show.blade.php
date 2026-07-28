@@ -112,5 +112,105 @@ $statusClass = [
 	</div>
 </div>
 
+@if($order->status === 'delivered')
+<div class="card border-0 shadow-sm mb-4">
+	<div class="card-body">
+		<h2 class="h5 fw-bold mb-4">Beri Ulasan Produk</h2>
+		@foreach ($order->orderItems as $item)
+			@php
+				$productId = $item->product_id;
+				$isReviewed = in_array($productId, $reviewedProductIds);
+			@endphp
+			
+			<div class="border rounded p-3 mb-3">
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<strong>{{ $item->product?->name ?? 'Produk tidak tersedia' }}</strong>
+					@if($isReviewed)
+						<span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>Sudah Diulas</span>
+					@endif
+				</div>
+				
+				@if(!$isReviewed && $item->product)
+					<form action="{{ route('reviews.store', $item->product) }}" method="POST" class="review-form">
+						@csrf
+						<div class="mb-3">
+							<label class="form-label fw-semibold" style="font-size: 14px;">Rating <span class="text-danger">*</span></label>
+							<div class="star-picker d-flex gap-1">
+								@for ($i = 1; $i <= 5; $i++)
+								<label class="star-label" data-value="{{ $i }}" title="{{ $i }} bintang" style="cursor: pointer; font-size: 1.5rem; color: #d1d5db; transition: color 0.15s;">
+									<input type="radio" name="rating" value="{{ $i }}" class="d-none">
+									<i class="bi bi-star-fill"></i>
+								</label>
+								@endfor
+							</div>
+						</div>
+						<div class="mb-3">
+							<label class="form-label fw-semibold" style="font-size: 14px;">Komentar <span class="text-secondary">(opsional)</span></label>
+							<textarea name="comment" rows="2" class="form-control form-control-sm" placeholder="Ceritakan pengalaman kamu dengan produk ini..." maxlength="1000"></textarea>
+						</div>
+						<button type="submit" class="btn btn-brand btn-sm submit-review-btn">
+							<span class="spinner-border spinner-border-sm d-none me-1 review-spinner" role="status"></span>
+							Kirim Review
+						</button>
+					</form>
+				@endif
+			</div>
+		@endforeach
+	</div>
+</div>
+@endif
+
 <a href="{{ route('orders.index') }}" class="btn btn-outline-dark">Kembali ke Riwayat Pesanan</a>
 @endsection
+
+@push('scripts')
+<script>
+    // Interactive star picker for multiple forms
+    (function() {
+        var pickers = document.querySelectorAll('.star-picker');
+        pickers.forEach(function(picker) {
+            var labels = picker.querySelectorAll('.star-label');
+            var activeColor = '#f59e0b';
+            var inactiveColor = '#d1d5db';
+
+            function updateStars(activeIndex) {
+                labels.forEach(function(label, index) {
+                    label.querySelector('i').style.color = index <= activeIndex ? activeColor : inactiveColor;
+                });
+            }
+
+            labels.forEach(function(label, index) {
+                label.addEventListener('click', function() {
+                    label.querySelector('input').checked = true;
+                    updateStars(index);
+                });
+
+                label.addEventListener('mouseenter', function() {
+                    updateStars(index);
+                });
+            });
+
+            picker.addEventListener('mouseleave', function() {
+                var checked = picker.querySelector('input:checked');
+                if (checked) {
+                    updateStars(parseInt(checked.value) - 1);
+                } else {
+                    updateStars(-1);
+                }
+            });
+        });
+
+        // Anti-double submit for multiple review forms
+        var forms = document.querySelectorAll('.review-form');
+        forms.forEach(function(form) {
+            form.addEventListener('submit', function() {
+                var btn = form.querySelector('.submit-review-btn');
+                var spinner = form.querySelector('.review-spinner');
+                
+                if (btn) btn.disabled = true;
+                if (spinner) spinner.classList.remove('d-none');
+            });
+        });
+    })();
+</script>
+@endpush

@@ -102,54 +102,7 @@ $avgRounded = (int) round($avgRating);
     </div>
     <div class="tab-pane fade" id="review-pane" role="tabpanel">
 
-        {{-- Review Form --}}
-        @auth
-        @if (auth()->user()->isBuyer())
-            @if ($canReview)
-            <div class="card border-0 bg-light mb-4">
-                <div class="card-body">
-                    <h6 class="fw-bold mb-3"><i class="bi bi-pencil-square me-1"></i>Tulis Review</h6>
-                    <form action="{{ route('reviews.store', $product) }}" method="POST" id="reviewForm">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Rating <span class="text-danger">*</span></label>
-                            <div class="star-picker d-flex gap-1" id="starPicker">
-                                @for ($i = 1; $i <= 5; $i++)
-                                <label class="star-label" data-value="{{ $i }}" title="{{ $i }} bintang" style="cursor: pointer; font-size: 1.75rem; color: #d1d5db; transition: color 0.15s;">
-                                    <input type="radio" name="rating" value="{{ $i }}" class="d-none" {{ old('rating') == $i ? 'checked' : '' }}>
-                                    <i class="bi bi-star-fill"></i>
-                                </label>
-                                @endfor
-                            </div>
-                            @error('rating')
-                            <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="mb-3">
-                            <label for="comment" class="form-label fw-semibold">Komentar <span class="text-secondary">(opsional)</span></label>
-                            <textarea name="comment" id="comment" rows="3" class="form-control" placeholder="Ceritakan pengalaman kamu dengan produk ini..." maxlength="1000">{{ old('comment') }}</textarea>
-                            @error('comment')
-                            <div class="text-danger small mt-1">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <button type="submit" class="btn btn-brand" id="submitReviewBtn">
-                            <span class="spinner-border spinner-border-sm d-none me-1" id="reviewSpinner" role="status"></span>
-                            Kirim Review
-                        </button>
-                    </form>
-                </div>
-            </div>
-            @elseif ($alreadyReviewed)
-            <div class="alert alert-success mb-4">
-                <i class="bi bi-check-circle-fill me-1"></i>Kamu sudah memberikan review untuk produk ini.
-            </div>
-            @elseif (!$hasOrdered)
-            <div class="alert alert-info mb-4">
-                <i class="bi bi-info-circle-fill me-1"></i>Hanya buyer yang sudah membeli dan menerima produk ini yang bisa memberikan review.
-            </div>
-            @endif
-        @endif
-        @endauth
+        {{-- Review Form dipindahkan ke halaman Detail Pesanan setelah Checkout --}}
 
         {{-- Review List --}}
         @forelse ($product->reviews as $review)

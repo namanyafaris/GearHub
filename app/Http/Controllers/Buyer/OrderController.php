@@ -35,8 +35,14 @@ class OrderController extends Controller
 
 		$order->load(['orderItems.product']);
 
+		$reviewedProductIds = \App\Models\Review::where('buyer_id', $request->user()->id)
+			->whereIn('product_id', $order->orderItems->pluck('product_id'))
+			->pluck('product_id')
+			->toArray();
+
 		return view('buyer.orders.show', [
 			'order' => $order,
+			'reviewedProductIds' => $reviewedProductIds,
 		]);
 	}
 
