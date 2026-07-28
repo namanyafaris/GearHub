@@ -160,6 +160,9 @@
                     @if (auth()->user()->isBuyer())
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('orders.*') ? 'active fw-semibold' : '' }}" href="{{ route('orders.index') }}">Pesanan Saya</a></li>
                     @endif
+                    @if (auth()->user()->isAdmin())
+                    <li class="nav-item"><a class="nav-link text-brand fw-bold" href="{{ route('admin.dashboard') }}"><i class="bi bi-speedometer2 me-1"></i>Kembali ke Dashboard Admin</a></li>
+                    @endif
                     @endauth
                 </ul>
 
