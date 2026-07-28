@@ -25,7 +25,7 @@
 				<td>
 					<div class="d-flex align-items-center gap-3">
 						@if (! empty($item->product->image))
-						<img src="{{ asset($item->product->image) }}" alt="{{ $item->product->name }}" width="64" height="64" class="rounded" style="object-fit: cover;" onerror="this.style.display='none';">
+						<img src="{{ Storage::url($item->product->image) }}" alt="{{ $item->product->name }}" width="64" height="64" class="rounded" style="object-fit: cover;" onerror="this.style.display='none';">
 						@endif
 						<div>
 							<div class="fw-semibold">{{ $item->product->name }}</div>

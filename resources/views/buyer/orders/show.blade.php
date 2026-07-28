@@ -81,7 +81,7 @@ $statusClass = [
 				
 				@if($order->payment_proof)
 					<div class="alert alert-success mb-2">Bukti pembayaran telah diunggah.</div>
-					<a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="btn btn-outline-primary btn-sm w-100">Lihat Bukti Struk</a>
+					<a href="{{ Storage::url($order->payment_proof) }}" target="_blank" class="btn btn-outline-primary btn-sm w-100">Lihat Bukti Struk</a>
 				@elseif($order->status !== 'pending')
 					<div class="alert alert-info mb-0">Pesanan telah diproses. Bukti transfer tidak diperlukan lagi.</div>
 				@else

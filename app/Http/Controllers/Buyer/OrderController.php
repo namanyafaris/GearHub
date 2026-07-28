@@ -64,7 +64,7 @@ class OrderController extends Controller
 			'payment_proof.max' => 'Ukuran maksimal gambar adalah 2MB.',
 		]);
 
-		$path = $request->file('payment_proof')->store('payment_proofs', 'public');
+		$path = $request->file('payment_proof')->store('payment_proofs');
 
 		$order->update([
 			'payment_proof' => $path,

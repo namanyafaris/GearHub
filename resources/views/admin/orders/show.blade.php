@@ -18,7 +18,7 @@
 			<br>
 			Bukti Transfer: 
 			@if($order->payment_proof)
-				<a href="{{ asset('storage/' . $order->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-info mt-1">Lihat Bukti Transfer</a>
+				<a href="{{ Storage::url($order->payment_proof) }}" target="_blank" class="btn btn-sm btn-outline-info mt-1">Lihat Bukti Transfer</a>
 			@else
 				<span class="text-danger">Belum diunggah</span>
 			@endif

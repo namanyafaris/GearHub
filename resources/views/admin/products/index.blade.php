@@ -36,7 +36,7 @@
 	<tbody>
 		@foreach($products as $p)
 		<tr>
-			<td style="width:80px;"><img src="{{ $p->image ? asset('storage/'.$p->image) : '/images/placeholder.png' }}" alt="" class="img-fluid"></td>
+			<td style="width:80px;"><img src="{{ $p->image ? Storage::url($p->image) : '/images/placeholder.png' }}" alt="" class="img-fluid"></td>
 			<td>{{ $p->name }}</td>
 			<td>{{ $p->category->name ?? '-' }}</td>
 			<td>Rp {{ number_format($p->price,0,',','.') }}</td>

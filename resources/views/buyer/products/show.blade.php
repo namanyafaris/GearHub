@@ -15,7 +15,7 @@ $avgRounded = (int) round($avgRating);
                 @if ($mainImage)
                 <img
                     id="mainProductImage"
-                    src="{{ asset('storage/' . $mainImage) }}"
+                    src="{{ Storage::url($mainImage) }}"
                     alt="{{ $product->name }}"
                     class="img-fluid rounded-3 w-100"
                     style="height: 420px; object-fit: cover;"
@@ -28,8 +28,8 @@ $avgRounded = (int) round($avgRating);
                 @if ($images->count() > 1)
                 <div class="d-flex flex-wrap gap-2 mt-3">
                     @foreach ($images as $image)
-                    <button type="button" class="btn p-0 border rounded-3 thumb-trigger" data-image="{{ asset('storage/' . $image) }}">
-                        <img src="{{ asset('storage/' . $image) }}" alt="thumb" width="72" height="72" style="object-fit: cover; border-radius: 0.5rem;" onerror="this.closest('button').style.display='none';">
+                    <button type="button" class="btn p-0 border rounded-3 thumb-trigger" data-image="{{ Storage::url($image) }}">
+                        <img src="{{ Storage::url($image) }}" alt="thumb" width="72" height="72" style="object-fit: cover; border-radius: 0.5rem;" onerror="this.closest('button').style.display='none';">
                     </button>
                     @endforeach
                 </div>

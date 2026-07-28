@@ -30,7 +30,7 @@ class CategoryController extends Controller
 		$data['slug'] = Str::slug($data['name']);
 
 		if ($request->hasFile('image')) {
-			$data['image'] = $request->file('image')->store('categories', 'public');
+			$data['image'] = $request->file('image')->store('categories');
 		}
 
 		Category::create($data);
@@ -53,7 +53,7 @@ class CategoryController extends Controller
 		$data['slug'] = Str::slug($data['name']);
 
 		if ($request->hasFile('image')) {
-			$data['image'] = $request->file('image')->store('categories', 'public');
+			$data['image'] = $request->file('image')->store('categories');
 		}
 
 		$category->update($data);

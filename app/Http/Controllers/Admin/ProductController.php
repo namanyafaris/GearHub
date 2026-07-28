@@ -52,14 +52,14 @@ class ProductController extends Controller
 		$data['is_active'] = $request->has('is_active');
 
 		if ($request->hasFile('image')) {
-			$data['image'] = $request->file('image')->store('products', 'public');
+			$data['image'] = $request->file('image')->store('products');
 		}
 
 		$product = Product::create($data);
 
 		if ($request->hasFile('images')) {
 			foreach ($request->file('images') as $img) {
-				$path = $img->store('products', 'public');
+				$path = $img->store('products');
 				ProductImage::create(['product_id' => $product->id, 'path' => $path]);
 			}
 		}
@@ -91,14 +91,14 @@ class ProductController extends Controller
 		$data['is_active'] = $request->has('is_active');
 
 		if ($request->hasFile('image')) {
-			$data['image'] = $request->file('image')->store('products', 'public');
+			$data['image'] = $request->file('image')->store('products');
 		}
 
 		$product->update($data);
 
 		if ($request->hasFile('images')) {
 			foreach ($request->file('images') as $img) {
-				$path = $img->store('products', 'public');
+				$path = $img->store('products');
 				ProductImage::create(['product_id' => $product->id, 'path' => $path]);
 			}
 		}

@@ -35,7 +35,7 @@
 	<input type="file" name="image" class="form-control">
 	<div class="form-text text-muted">Format: JPG, PNG. Maksimal 2MB. Jika gambar terlalu besar, proses upload akan gagal.</div>
 	@if(!empty($product->image))
-	<img src="{{ asset('storage/'.$product->image) }}" class="img-fluid mt-2" style="max-width:150px;">
+	<img src="{{ Storage::url($product->image) }}" class="img-fluid mt-2" style="max-width:150px;">
 	@endif
 </div>
 <div class="mb-3">
@@ -45,7 +45,7 @@
 	@if(!empty($product->productImages))
 	<div class="mt-2">
 		@foreach($product->productImages as $img)
-		<img src="{{ asset('storage/'.$img->path) }}" class="img-thumbnail me-2 mb-2" style="width:80px;">
+		<img src="{{ Storage::url($img->path) }}" class="img-thumbnail me-2 mb-2" style="width:80px;">
 		@endforeach
 	</div>
 	@endif

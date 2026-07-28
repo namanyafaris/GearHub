@@ -7,7 +7,7 @@ $ratingInt = (int) round($product->averageRating());
     <a href="{{ route('products.show', $product) }}" class="text-decoration-none text-dark">
         @if (! empty($product->image))
         <img
-            src="{{ asset('storage/' . $product->image) }}"
+            src="{{ Storage::url($product->image) }}"
             alt="{{ $product->name }}"
             class="card-img-top"
             style="height: 190px; object-fit: cover;"
