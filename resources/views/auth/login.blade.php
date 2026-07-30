@@ -38,12 +38,7 @@
                             <label for="remember_me" class="form-check-label">Ingat saya</label>
                         </div>
 
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                @if (Route::has('password.request'))
-                                <a class="small" href="{{ route('password.request') }}">Lupa password?</a>
-                                @endif
-                            </div>
+                        <div class="d-flex justify-content-end">
                             <button class="btn btn-primary">Masuk</button>
                         </div>
                     </form>
