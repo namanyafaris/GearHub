@@ -292,7 +292,7 @@ class CollaborativeFilteringService
         // Case 1: User baru (tidak ada di matrix)
         if (!isset($matrix[$userId])) {
             // Ambil 8 produk dengan total weight tertinggi di user_interactions
-            return Product::whereHas('userInteractions')
+            $popularProducts = Product::whereHas('userInteractions')
                 ->where('is_active', true)
                 ->withCount(['userInteractions as total_weight' => function ($q) {
                     $q->selectRaw('sum(weight) as total_weight');
@@ -300,6 +300,13 @@ class CollaborativeFilteringService
                 ->orderByDesc('total_weight')
                 ->limit(8)
                 ->get();
+
+            // Absolute Fallback: Jika database interaksi masih KOSONG SAMA SEKALI (Hari pertama rilis)
+            if ($popularProducts->isEmpty()) {
+                return Product::where('is_active', true)->inRandomOrder()->limit(8)->get();
+            }
+
+            return $popularProducts;
         }
 
         // Case 2: User sudah ada tapi tidak ada similar users
@@ -316,7 +323,7 @@ class CollaborativeFilteringService
 
         if (!$favoriteCategory) {
             // Fallback: best-seller dari semua kategori
-            return Product::whereHas('userInteractions')
+            $popularProducts = Product::whereHas('userInteractions')
                 ->where('is_active', true)
                 ->withCount(['userInteractions as total_weight' => function ($q) {
                     $q->selectRaw('sum(weight)');
@@ -324,6 +331,12 @@ class CollaborativeFilteringService
                 ->orderByDesc('total_weight')
                 ->limit(8)
                 ->get();
+
+            if ($popularProducts->isEmpty()) {
+                return Product::where('is_active', true)->inRandomOrder()->limit(8)->get();
+            }
+
+            return $popularProducts;
         }
 
         // Ambil best-seller dari favorite category
