@@ -45,7 +45,7 @@
 	@if(!empty($product->productImages))
 	<div class="mt-2">
 		@foreach($product->productImages as $img)
-		<img src="{{ Storage::url($img->path) }}" class="img-thumbnail me-2 mb-2" style="width:80px;">
+		<img src="{{ Storage::url($img->image_path) }}" class="img-thumbnail me-2 mb-2" style="width:80px;">
 		@endforeach
 	</div>
 	@endif

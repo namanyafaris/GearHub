@@ -2,7 +2,7 @@
 
 @section('content')
 @php
-$images = collect([$product->image])->merge($product->productImages->pluck('path'))->filter()->values();
+$images = collect([$product->image])->merge($product->productImages->pluck('image_path'))->filter()->values();
 $mainImage = $product->image_url;
 $avgRating = $product->averageRating();
 $avgRounded = (int) round($avgRating);

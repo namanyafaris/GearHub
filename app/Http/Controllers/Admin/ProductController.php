@@ -48,19 +48,19 @@ class ProductController extends Controller
 			'is_active' => 'sometimes|boolean'
 		]);
 
-		$data['slug'] = Str::slug($data['name']);
+		$data['slug'] = Str::slug($data['name']) . '-' . Str::random(5);
 		$data['is_active'] = $request->has('is_active');
 
 		if ($request->hasFile('image')) {
-			$data['image'] = $request->file('image')->store('products');
+			$data['image'] = $request->file('image')->store('products', 'public');
 		}
 
 		$product = Product::create($data);
 
 		if ($request->hasFile('images')) {
 			foreach ($request->file('images') as $img) {
-				$path = $img->store('products');
-				ProductImage::create(['product_id' => $product->id, 'path' => $path]);
+				$path = $img->store('products', 'public');
+				ProductImage::create(['product_id' => $product->id, 'image_path' => $path]);
 			}
 		}
 
@@ -87,19 +87,19 @@ class ProductController extends Controller
 			'is_active' => 'sometimes|boolean'
 		]);
 
-		$data['slug'] = Str::slug($data['name']);
+		$data['slug'] = $product->name !== $data['name'] ? Str::slug($data['name']) . '-' . Str::random(5) : $product->slug;
 		$data['is_active'] = $request->has('is_active');
 
 		if ($request->hasFile('image')) {
-			$data['image'] = $request->file('image')->store('products');
+			$data['image'] = $request->file('image')->store('products', 'public');
 		}
 
 		$product->update($data);
 
 		if ($request->hasFile('images')) {
 			foreach ($request->file('images') as $img) {
-				$path = $img->store('products');
-				ProductImage::create(['product_id' => $product->id, 'path' => $path]);
+				$path = $img->store('products', 'public');
+				ProductImage::create(['product_id' => $product->id, 'image_path' => $path]);
 			}
 		}
 
